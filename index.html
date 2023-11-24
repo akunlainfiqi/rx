@@ -1,0 +1,24 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.IO Broadcast</title>
+</head>
+<body>
+  <div id="message-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Event listener to handle incoming messages
+    socket.on('message', (message) => {
+      // Display the received message on the webpage
+      const messageContainer = document.getElementById('message-container');
+      messageContainer.innerHTML += `<p>${message}</p>`;
+    });
+  </script>
+</body>
+</html>
