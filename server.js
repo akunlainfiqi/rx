@@ -11,16 +11,30 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/sender', (req, res) => {
+  res.sendFile(__dirname + '/sender.html')
+})
+
+app.get('/receiver', (req,res) => {
+  res.sendFile(__dirname + '/receiver.html')
+})
+
+let t = "" //latest text
 io.on('connection', (socket) => {
   console.log('A user connected');
-  io.emit('message', 'A new user has joined');
+  
+  if (t) {
+    socket.emit('text', t)
+  }
+
+  socket.on('text', (text) => { //anggep aja bestcase ga dibajak
+    console.log(`Text received: ${text}`);
+    t = text
+    io.emit('text', t);
+  });
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
-  });
-
-  socket.onAny((eventName, ...args) => {
-    console.log(`Ignoring event '${eventName}' from client`);
   });
 });
 

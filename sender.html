@@ -1,0 +1,30 @@
+<!-- sender.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sender</title>
+</head>
+<body>
+  <textarea id="textInput" placeholder="Enter text"></textarea>
+  <button onclick="sendText()">Send Text</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function sendText() {
+      const textInput = document.getElementById('textInput');
+      const text = textInput.value;
+
+      if (text.trim() !== '') {
+        socket.emit('text', text);
+        console.log('Text sent to the server');
+      } else {
+        console.log('Text input is empty');
+      }
+    }
+  </script>
+</body>
+</html>
