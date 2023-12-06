@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receiver</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver</title>
 </head>
 <body>
-  <div id="message-container"></div>
+    <div id="message-container"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
-  <script>
-    const socket = io();
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-    socket.on('text', (text) => {
-      const messageContainer = document.getElementById('message-container');
-      messageContainer.innerHTML = `<img src="https://storage.googleapis.com/rx-static/${text}.png" height="100%" width="auto"></img>`;
-    });
-  </script>
+        socket.on('text', (text) => {
+            //TODO: jejelin aframe disini bang
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = `<img src="https://storage.googleapis.com/rx-static/${text}.png" height="100%" width="auto"></img>`;
+        });
+    </script>
 </body>
 </html>
