@@ -32,13 +32,16 @@
         messages.sort((a, b) => b.count - a.count);
 
         const initialY = messages.length * 0.25 * -1 + 0.5;
+        let jumlah_count = 0
+        for (let i = 0; i < messages.length; i++) jumlah_count += messages[i].count
+
         let oddY = initialY;
         let evenY = initialY;
         for (let i = 0; i < messages.length; i++) {
           let { text, count } = messages[i];
 
           const odd = i % 2 == 0;
-          let scale = 6 + count;
+          let scale = Math.ceil(40 * (count / jumlah_count));
           // scale = 1;
 
           var el = document.createElement("a-entity");
@@ -51,7 +54,7 @@
           el.setAttribute("scale", `${scale} ${scale} ${scale}`);
           el.setAttribute(
             "text",
-            `value: ${text}; align: ${odd ? "right" : "left"}; anchor: ${
+            `color: red; value: ${text}; align: ${odd ? "right" : "left"}; anchor: ${
               odd ? "right" : "left"
             }`
           );
