@@ -12,20 +12,20 @@
   <body style="margin: 0px; overflow: hidden">
     <script>
       const socket = io();
-      socket.on('text', (text) => {
-        document.querySelector('a-marker').innerHTML = ""
-        render(text)
+      socket.on("text", (text) => {
+        document.querySelector("a-marker").innerHTML = "";
+        render(text);
       });
 
       function kirim() {
-        let text = document.getElementById('message').value
-          if (text.trim() !== '') {
-            socket.emit('text', text);
-            console.log('Text sent to the server');
-          } else {
-            console.log('Text input is empty');
-          }
-          document.getElementById('message').value = ''
+        let text = document.getElementById("message").value;
+        if (text.trim() !== "") {
+          socket.emit("text", text);
+          console.log("Text sent to the server");
+        } else {
+          console.log("Text input is empty");
+        }
+        document.getElementById("message").value = "";
       }
 
       function render(messages) {
@@ -108,6 +108,28 @@
       >
         Send
       </button>
+    </div>
+
+    <div
+      id="splash"
+      onclick="document.getElementById('splash').style.display = 'none';"
+      style="
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        z-index: 201;
+        top: 0;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        justify-content: center;
+      "
+    >
+      <img
+        onclick="document.getElementById('splash').style.display = 'none';"
+        src="/splash"
+        height="100%"
+        style="margin: 0 auto"
+      />
     </div>
   </body>
 </html>

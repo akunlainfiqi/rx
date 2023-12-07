@@ -1,56 +1,61 @@
 // server.js
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-const fs = require('fs')
+const express = require("express");
+const http = require("http");
+const socketIO = require("socket.io");
+const fs = require("fs");
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
 });
 
-app.get('/sender', (req, res) => {
-  res.sendFile(__dirname + '/sender.html')
-})
+app.get("/sender", (req, res) => {
+  res.sendFile(__dirname + "/sender.html");
+});
 
-app.get('/receiver', (req,res) => {
-  res.sendFile(__dirname + '/receiver.html')
-})
+app.get("/receiver", (req, res) => {
+  res.sendFile(__dirname + "/receiver.html");
+});
 
-app.get('/test', (req,res) => {
-  res.sendFile(__dirname + '/test.html')
-})
+app.get("/test", (req, res) => {
+  res.sendFile(__dirname + "/test.html");
+});
 
-let t = "" //latest text
-io.on('connection', (socket) => {
-  console.log('A user connected');
-  
+app.get("/splash", (req, res) => {
+  res.sendFile(__dirname + "/splash.png");
+});
+
+let t = ""; //latest text
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
   if (t) {
-    socket.emit('text', t)
+    socket.emit("text", t);
   }
 
-  socket.on('text', async (text) => { //anggep aja bestcase ga dibajak
+  socket.on("text", async (text) => {
+    //anggep aja bestcase ga dibajak
     console.log(`Text received: ${text}`);
-    let data = fs.readFileSync('word-store.json')
-    let words = JSON.parse(data)
+    let data = fs.readFileSync("word-store.json");
+    let words = JSON.parse(data);
 
-    let found = false
+    let found = false;
     for (let i = 0; i < words.length; i++) {
       if (words[i].text === text) {
-        messages[i].count++;
+        words[i].count++;
         found = true;
-        break
+        break;
       }
     }
     if (!found) words.push({ text: text, count: 1 });
-    fs.writeFileSync('word-store.json', JSON.stringify(words))
-    io.emit('text', words);
+    fs.writeFileSync("word-store.json", JSON.stringify(words));
+    io.emit("text", words);
   });
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
