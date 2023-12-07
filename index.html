@@ -5,23 +5,30 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
     <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
     <style></style>
   </head>
 
   <body style="margin: 0px; overflow: hidden">
     <script>
-      let messages = [
-        { text: "keren", count: 1 },
-        { text: "mantap", count: 30 },
-        { text: "bagus", count: 2 },
-        { text: "terbaek", count: 2 },
-        { text: "asli", count: 5 },
-        { text: "cuyy", count: 4 },
-        { text: "jelek", count: 3 },
-        { text: "test", count: 2 },
-      ];
+      const socket = io();
+      socket.on('text', (text) => {
+        document.querySelector('a-marker').innerHTML = ""
+        render(text)
+      });
 
-      function render() {
+      function kirim() {
+        let text = document.getElementById('message').value
+          if (text.trim() !== '') {
+            socket.emit('text', text);
+            console.log('Text sent to the server');
+          } else {
+            console.log('Text input is empty');
+          }
+          document.getElementById('message').value = ''
+      }
+
+      function render(messages) {
         messages.sort((a, b) => b.count - a.count);
 
         const initialY = messages.length * 0.25 * -1 + 0.5;
@@ -55,20 +62,6 @@
           if (i % 2 == 0) oddY += dy;
           else evenY += dy;
         }
-      }
-
-      function kirim() {
-        let pesan = document.getElementById("message").value;
-
-        var el = document.createElement("a-entity");
-        el.setAttribute("position", `-3 0 -0.55`);
-        el.setAttribute("rotation", `-90 0 0`);
-        el.setAttribute(
-          "text",
-          `value: ${pesan}; align: center; wrap-count: 10`
-        );
-
-        document.querySelector("a-marker").appendChild(el);
       }
     </script>
 
@@ -111,7 +104,7 @@
           font-size: 0.8rem;
           background: pink;
         "
-        onclick="render()"
+        onclick="kirim()"
       >
         Send
       </button>

@@ -35,9 +35,16 @@ io.on('connection', (socket) => {
     console.log(`Text received: ${text}`);
     let data = fs.readFileSync('word-store.json')
     let words = JSON.parse(data)
-    if (words.hasOwnProperty(text)) {
-      words[text]++
-    } else words[text] = 1
+
+    let found = false
+    for (let i = 0; i < words.length; i++) {
+      if (words[i].text === text) {
+        messages[i].count++;
+        found = true;
+        break
+      }
+    }
+    if (!found) words.push({ text: text, count: 1 });
     fs.writeFileSync('word-store.json', JSON.stringify(words))
     io.emit('text', words);
   });
