@@ -1,24 +1,88 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Socket.IO Broadcast</title>
-</head>
-<body>
-  <div id="message-container"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Broadcast</title>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
-  <script>
-    const socket = io();
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
 
-    // Event listener to handle incoming messages
-    socket.on('message', (message) => {
-      // Display the received message on the webpage
-      const messageContainer = document.getElementById('message-container');
-      messageContainer.innerHTML += `<p>${message}</p>`;
-    });
-  </script>
-</body>
+    <script>
+      AFRAME.registerComponent("redtext", {
+        init: function () {
+          this.el.addEventListener("click", (e) => {
+            console.log(e);
+
+            let text = prompt("text");
+
+            document.querySelector("#redtext").setAttribute("text", text);
+
+            let a = document.createElement("p");
+            a.innerHTML = "text clicked";
+            document.querySelector("#text").appendChild(a);
+          });
+        },
+      });
+
+      AFRAME.registerComponent("blue", {
+        init: function () {
+          this.el.addEventListener("click", (e) => {
+            console.log(e);
+            document.querySelector("#blue-anim").emit("buttonpressed");
+            let a = document.createElement("p");
+            a.innerHTML = "blue clicked";
+            document.querySelector("#text").appendChild(a);
+          });
+        },
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene
+      embedded
+      arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3; debugUIEnabled: false;"
+    >
+      <a-marker type="barcode" value="3" cursor="rayOrigin: mouse">
+        <a-text
+          value="Keqing Wangy"
+          rotation="-90 0 0"
+          position="-3 0 -1"
+          align="left"
+          redtext
+        >
+        </a-text>
+
+        <a-box position="3 0 -1" material="color: blue;" blue>
+          <a-animation
+            id="blue-anim"
+            begin="buttonpressed"
+            dur="500"
+            attribute="rotatiom"
+            from="0 0 0"
+            to="45 45 45"
+            direction="alternate"
+          ></a-animation>
+        </a-box>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <div id="message-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Event listener to handle incoming messages
+      socket.on("message", (message) => {
+        // Display the received message on the webpage
+        const messageContainer = document.getElementById("message-container");
+        messageContainer.innerHTML += `<p>${message}</p>`;
+      });
+    </script>
+  </body>
 </html>
+`
