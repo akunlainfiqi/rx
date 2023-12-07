@@ -12,10 +12,9 @@
   <body style="margin: 0px; overflow: hidden">
     <script>
       const socket = io();
-      socket.on("text", (text) => {
-        document.querySelector("a-marker").innerHTML = "";
-        render(text);
-      });
+      socket.on("text", (text) => render(text));
+
+      socket.on('incoming', (text) => render(text))
 
       function kirim() {
         let text = document.getElementById("message").value;
@@ -29,6 +28,7 @@
       }
 
       function render(messages) {
+        document.querySelector("a-marker").innerHTML = "";
         messages.sort((a, b) => b.count - a.count);
 
         const initialY = messages.length * 0.25 * -1 + 0.5;

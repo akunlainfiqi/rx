@@ -27,13 +27,13 @@ app.get("/splash", (req, res) => {
   res.sendFile(__dirname + "/splash.png");
 });
 
-let t = ""; //latest text
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  if (t) {
-    socket.emit("text", t);
-  }
+  let data = fs.readFileSync("word-store.json");
+  let words = JSON.parse(data);
+
+  socket.emit('incoming', words)
 
   socket.on("text", async (text) => {
     //anggep aja bestcase ga dibajak
