@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <title>Receiver</title>
 </head>
 <body>
     <div id="message-container"></div>
-
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
     <script>
         const socket = io();
@@ -16,7 +18,39 @@
             //TODO: jejelin aframe disini bang
             const messageContainer = document.getElementById('message-container');
             messageContainer.innerHTML = `<img src="https://storage.googleapis.com/rx-static/${text}.png" height="100%" width="auto"></img>`;
+            
         });
     </script>
+    <div style="z-index: 99; position: fixed; top: 0; right: 0" id="text"></div>
+
+    <a-scene
+      embedded
+      arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    >
+      <a-marker type="barcode" value="3" cursor="rayOrigin: mouse">
+        <a-entity
+          id="redtext"
+          geometry="primitive: plane; width: 2; height: 2"
+          material="opacity: 0.5"
+          rotation="-90 0 0"
+          text=""
+          redtext
+        ></a-entity>
+
+        <a-box position="2 0.5 0" material="color: blue;" blue>
+          <a-animation
+            id="blue-anim"
+            begin="buttonpressed"
+            dur="500"
+            attribute="rotatiom"
+            from="0 0 0"
+            to="45 45 45"
+            direction="alternate"
+          ></a-animation>
+        </a-box>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
 </body>
 </html>

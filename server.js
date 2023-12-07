@@ -2,7 +2,7 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
-
+const fs = require('fs')
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -19,6 +19,10 @@ app.get('/receiver', (req,res) => {
   res.sendFile(__dirname + '/receiver.html')
 })
 
+app.get('/test', (req,res) => {
+  res.sendFile(__dirname + '/test.html')
+})
+
 let t = "" //latest text
 io.on('connection', (socket) => {
   console.log('A user connected');
@@ -27,10 +31,15 @@ io.on('connection', (socket) => {
     socket.emit('text', t)
   }
 
-  socket.on('text', (text) => { //anggep aja bestcase ga dibajak
+  socket.on('text', async (text) => { //anggep aja bestcase ga dibajak
     console.log(`Text received: ${text}`);
-    t = text
-    io.emit('text', t);
+    let data = fs.readFileSync('word-store.json')
+    let words = JSON.parse(data)
+    if (words.hasOwnProperty(text)) {
+      words[text]++
+    } else words[text] = 1
+    fs.writeFileSync('word-store.json', JSON.stringify(words))
+    io.emit('text', words);
   });
 
   socket.on('disconnect', () => {
